@@ -2,27 +2,24 @@ name: Sync Repos
 
 on:
   push:
-    branches: 
-      - 'main'      
-    paths: 
-      - 'tokens/**'
-      - '!.github/**'
+    branches:
+      - main
 
 jobs:
   sync-repo:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout only the tokens directory from core-foundation repository
-      - name: Checkout core-foundation repository with sparse checkout
+      # Step 1: Checkout core-foundation repository
+      - name: Checkout core-foundation repository
         uses: actions/checkout@v4
         with:
-          repository: svensson1982/core-foundation
-          ref: main
-          fetch-depth: 0
+          repository: svensson1982/core-foundation  # Specify foundation repo
+          ref: main  # Checkout main branch
+          fetch-depth: 0  # Get the full history
 
-      # Step 2: Set up Git authentication for core-web repository
-      - name: Set up Git authentication for core-web repository
+      # Step 2: Set up Git authentication for target repository
+      - name: Set up Git authentication for target repository
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
@@ -30,12 +27,12 @@ jobs:
         env:
           GIT_PAT: ${{ secrets.GIT_PAT }}
 
-      # Step 3: Merge changes from core-foundation/main into core-web/main, preferring core-foundation in conflicts
-      - name: Merge core-foundation main into core-web main
+      # Step 3: Merge changes from core-foundation/main into target repository main
+      - name: Merge core-foundation tokens into target main
         run: |
           cd core-web
 
-          # Fetch changes from core-web main
+          # Fetch changes from target main
           git checkout main
           git pull origin main
 
@@ -43,14 +40,37 @@ jobs:
           git remote add foundation https://x-access-token:${{ secrets.GIT_PAT }}@github.com/svensson1982/core-foundation.git
           git fetch foundation
 
-          # Merge the changes from core-foundation/main into core-web/main, resolving conflicts in favor of core-foundation
-          git merge foundation/main --allow-unrelated-histories -X theirs -m "Merged core-foundation main into core-web main, resolved conflicts by preferring core-foundation"
+          # Create a temporary branch to perform the merge
+          git checkout -b temp-merge
 
-          # Remove the Action YAML file to prevent it from being pushed
-          git checkout HEAD -- .github/workflows/sync-repos.yml
+          # Merge only the tokens directory from core-foundation/main
+          git checkout foundation/main -- tokens
 
-          # Push the merged changes back to core-web main
+          # Stage the changes
+          git add tokens
+
+          # Commit the changes
+          git commit -m "Merged tokens directory from core-foundation into core-web"
+
+          # Checkout main branch and merge the temporary branch
+          git checkout main
+          git merge temp-merge
+
+          # Push the merged changes back to target main
           git push origin main
+
+          # Clean up the temporary branch
+          git branch -d temp-merge
         env:
           GIT_PAT: ${{ secrets.GIT_PAT }}
-        #end
+
+      # Optional: Remove the sync-repos.yml from the last commit if needed
+      - name: Remove sync-repos.yml if exists
+        run: |
+          cd core-web
+          if [ -f .github/workflows/sync-repos.yml ]; then
+            git rm --cached .github/workflows/sync-repos.yml
+            git commit -m "Remove sync-repos.yml from tracked files" || echo "No changes to commit"
+          fi
+        env:
+          GIT_PAT: ${{ secrets.GIT_PAT }}
