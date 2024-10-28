@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+     #paths: 
+     #  - 'tokens/**'
+     #  - '!.github/workflows/sync-repos.yml' 
 
 env:
     GIT_PAT: ${{ secrets.GIT_PAT }}
@@ -13,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout core-foundation repository
       - name: Checkout core-foundation repository
         uses: actions/checkout@v4
         with:
@@ -21,7 +23,6 @@ jobs:
           ref: main
           fetch-depth: 0  # Get the full history
 
-      # Step 2: Set up Git authentication for target repository
       - name: Set up Git authentication for target repository
         run: |
           git config --global user.name "GitHub Action"
@@ -63,8 +64,7 @@ jobs:
           # Clean up the temporary branch
           git branch -d temp-merge
 
-      # Remove the sync-repos.yml from the last commit if needed
-      - name: Remove sync-repos.yml if exists
+      - name: Remove if sync-repos.yml exists
         run: |
           cd core-web
           if [ -f .github/workflows/sync-repos.yml ]; then
