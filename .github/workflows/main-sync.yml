@@ -1,0 +1,29 @@
+name: Sync Repos
+
+on:
+  push:
+    branches:
+      - main
+    paths: 
+      - 'tokens/**'
+      - '!.github/workflows/**' 
+
+jobs:
+  sync-core-web:
+    uses: ./.github/workflows/sync-repo.yml
+    with:
+      target_repo: "asdf/core-web"
+      foundation_repo: "asdf/core-foundation"
+
+  sync-core-android:
+    uses: ./.github/workflows/sync-repo.yml
+    with:
+      target_repo: "asdf/core-android"
+      foundation_repo: "asdf/core-foundation"
+
+  sync-core-ios:
+    uses: ./.github/workflows/sync-repo.yml
+    with:
+      target_repo: "asdf/core-ios"
+      foundation_repo: "asdf/core-foundation"
+        
