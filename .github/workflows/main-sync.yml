@@ -12,18 +12,18 @@ jobs:
   sync-core-web:
     uses: ./.github/workflows/sync-repo.yml
     with:
-      target_repo: "core-web"
-      foundation_repo: "core-foundation"
+      target_repo: "svensson1982/core-web"
+      foundation_repo: "svensson1982/core-foundation"
 
   sync-core-android:
     uses: ./.github/workflows/sync-repo.yml
     with:
-      target_repo: "core-android"
-      foundation_repo: "core-foundation"
+      target_repo: "svensson1982/core-android"
+      foundation_repo: "svensson1982/core-foundation"
 
   sync-core-ios:
     uses: ./.github/workflows/sync-repo.yml
     with:
-      target_repo: "core-ios"
-      foundation_repo: "core-foundation"
+      target_repo: "svensson1982/core-ios"
+      foundation_repo: "svensson1982/core-foundation"
         
