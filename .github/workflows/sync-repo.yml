@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-    GIT_PAT: ${{ secrets.GEN_PAT }}
+    GIT_PAT: ${{ secrets.GIT_PAT }}
 
 jobs:
   sync:
@@ -29,7 +29,7 @@ jobs:
           repository: ${{ inputs.foundation_repo }}
           ref: main
           fetch-depth: 0
-          token: $GIT_PAT
+          token: ${{ secrets.GIT_PAT }}
 
       - name: Set up Git authentication and clone target repository
         run: |
