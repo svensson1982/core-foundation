@@ -1,1 +1,2 @@
-# .github
+.github/workflows/main-sync.yml
+.github/workflows/sync-repo.yml
