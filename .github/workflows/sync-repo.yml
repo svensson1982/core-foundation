@@ -19,8 +19,9 @@ env:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    # permissions:
-    #   contents: write
+    permissions:
+      actions: write
+      contents: read
     steps:
       - name: Checkout foundation repository
         uses: actions/checkout@v4
