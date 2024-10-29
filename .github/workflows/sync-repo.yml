@@ -13,16 +13,14 @@ on:
         required: true
         type: string
 
-
-
 env:
     GIT_PAT: ${{ secrets.GEN_PAT }}
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    # permissions:
+    #   contents: write
       
     steps:
       - name: Checkout foundation repository
@@ -31,6 +29,7 @@ jobs:
           repository: ${{ inputs.foundation_repo }}
           ref: main
           fetch-depth: 0
+          token: $GIT_PAT
 
       - name: Set up Git authentication and clone target repository
         run: |
