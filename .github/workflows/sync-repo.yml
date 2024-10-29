@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     # permissions:
     #   contents: write
-
     steps:
       - name: Checkout foundation repository
         uses: actions/checkout@v4
@@ -52,8 +51,6 @@ jobs:
           git merge temp-merge
           git push origin main
           git branch -d temp-merge
-
-
 
 
 
