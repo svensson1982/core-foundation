@@ -28,7 +28,6 @@ jobs:
           repository: ${{ inputs.foundation_repo }}
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.GIT_PAT }}
 
       - name: Set up Git authentication and clone target repository
         run: |
