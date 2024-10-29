@@ -13,13 +13,17 @@ on:
         required: true
         type: string
 
+
+
 env:
     GIT_PAT: ${{ secrets.GEN_PAT }}
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+      
     steps:
       - name: Checkout foundation repository
         uses: actions/checkout@v4
@@ -87,7 +91,7 @@ jobs:
 #         run: |
 #           git config --global user.name "GitHub Action"
 #           git config --global user.email "action@github.com"
-#           git clone https://x-access-token:$GIT_PAT@github.com/svensson1982/${{ matrix.repo }}
+#           git clone https://x-access-token:$GIT_PAT@github.com/svensson1982/core-web.git ${{ matrix.repo }}
 
 #       # Step 3: Merge changes from core-foundation/main into target repository main
 #       - name: Merge core-foundation tokens into target main
